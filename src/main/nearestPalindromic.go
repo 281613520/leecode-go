@@ -44,3 +44,11 @@ func nearestPalindromic(n string) string {
 	}
 	return strconv.Itoa(ans)
 }
+
+func abs(i int) int {
+	if i < 0 {
+		return -i
+	}
+
+	return i
+}
