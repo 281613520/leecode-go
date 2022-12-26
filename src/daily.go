@@ -63,3 +63,59 @@ func validPath(n int, edges [][]int, source int, destination int) bool {
 
 	return result
 }
+
+func countHomogenous(s string) int {
+	const mod int = 1e9 + 7
+	cnt := 0
+	prev := rune(s[0])
+	ans := 0
+
+	for _, v := range s {
+		if v == prev {
+			cnt++
+		} else {
+			prev = v
+
+			ans += cnt * (cnt + 1) / 2 % mod
+
+			cnt = 1
+		}
+	}
+	ans += (cnt + 1) * cnt / 2 % mod
+	return ans
+
+}
+
+func dividePlayers(skill []int) int64 {
+	sum := 0
+
+	numMap := make(map[int]int)
+
+	for _, v := range skill {
+		sum += v
+		numMap[v]++
+	}
+
+	nums := len(skill) / 2
+
+	if sum%nums != 0 {
+		return -1
+	}
+
+	avg := sum / nums
+
+	ans := int64(0)
+
+	for _, v := range skill {
+		cur := avg - v
+
+		if numMap[cur] == numMap[v] {
+			ans += int64(cur * v)
+		} else {
+			return -1
+		}
+
+	}
+
+	return ans / 2
+}
