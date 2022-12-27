@@ -119,3 +119,17 @@ func dividePlayers(skill []int) int64 {
 
 	return ans / 2
 }
+
+func minimumMoves(s string) int {
+	ans := 0
+	covered := -1
+
+	for i, v := range s {
+		if v == 'X' && i > covered {
+			ans++
+			covered = i + 2
+		}
+	}
+
+	return ans
+}
