@@ -54,3 +54,78 @@ func numIslands(grid [][]byte) int {
 
 	return ans
 }
+
+func maxAreaOfIsland(grid [][]int) int {
+	ans := 0
+	var dfs func(grid [][]int, x int, y int) int
+
+	dfs = func(grid [][]int, x int, y int) int {
+
+		if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[0]) || grid[x][y] != 1 {
+			return 0
+		}
+
+		tmp := 1
+		grid[x][y] = 2
+		tmp += dfs(grid, x+1, y)
+		tmp += dfs(grid, x-1, y)
+		tmp += dfs(grid, x, y+1)
+		tmp += dfs(grid, x, y-1)
+
+		return tmp
+	}
+
+	for i, v1 := range grid {
+		for j, v2 := range v1 {
+			if v2 == 1 {
+				ans = max(dfs(grid, i, j), ans)
+
+			}
+		}
+	}
+
+	return ans
+}
+
+func max(mianji int, ans int) int {
+	if mianji > ans {
+		return mianji
+	}
+
+	return ans
+}
+
+func closedIsland(grid [][]int) int {
+	nums := 0
+	for i := 1; i < len(grid)-1; i++ {
+		for j := 1; j < len(grid[i])-1; j++ {
+			if grid[i][j] == 0 {
+				if dfs(grid, i, j, true) {
+					nums++
+				}
+			}
+		}
+	}
+	return nums
+}
+
+func dfs(grid [][]int, r, c int, result bool) bool {
+	if r == 0 || c == 0 || r == len(grid)-1 || c == len(grid[r])-1 {
+		return false
+	}
+	grid[r][c] = 1
+	if r-1 >= 0 && grid[r-1][c] == 0 {
+		// result放到后边，避免提前短路
+		result = dfs(grid, r-1, c, result) && result
+	}
+	if r+1 < len(grid) && grid[r+1][c] == 0 {
+		result = dfs(grid, r+1, c, result) && result
+	}
+	if c-1 >= 0 && grid[r][c-1] == 0 {
+		result = dfs(grid, r, c-1, result) && result
+	}
+	if c+1 < len(grid[r]) && grid[r][c+1] == 0 {
+		result = dfs(grid, r, c+1, result) && result
+	}
+	return result
+}

@@ -133,3 +133,21 @@ func minimumMoves(s string) int {
 
 	return ans
 }
+
+func minimumLength(s string) int {
+	i, j := 0, len(s)
+
+	for i < j && s[i] == s[j] {
+		c := s[i]
+
+		for i <= j && s[i] == c {
+			i++
+		}
+
+		for i <= j && s[j] == c {
+			j--
+		}
+	}
+
+	return j - i + 1
+}
