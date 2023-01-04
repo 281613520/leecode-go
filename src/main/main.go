@@ -1,22 +1,45 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"time"
 )
 
 func main() {
-	fmt.Print(111111)
-	obj := Constructor(3)
-	obj.EnQueue(1)
-	obj.EnQueue(2)
-	obj.EnQueue(3)
-	obj.EnQueue(4)
-	obj.Rear()
-	obj.IsFull()
-	obj.DeQueue()
-	obj.EnQueue(4)
-	obj.Rear()
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 
+	go handle(ctx, 500*time.Millisecond)
+	select {
+	case <-ctx.Done():
+		fmt.Println("main", ctx.Err())
+	}
+
+	var c Duck = &Cat{Name: "draven"}
+	c.Quack()
+}
+
+type Duck interface {
+	Quack()
+}
+
+type Cat struct {
+	Name string
+}
+
+//go:noinline
+func (c *Cat) Quack() {
+	println(c.Name + " meow")
+}
+
+func handle(ctx context.Context, duration time.Duration) {
+	select {
+	case <-ctx.Done():
+		fmt.Println("handle", ctx.Err())
+	case <-time.After(duration):
+		fmt.Println("process request with", duration)
+	}
 }
 
 type MyCircularQueue struct {

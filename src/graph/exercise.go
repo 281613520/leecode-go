@@ -129,3 +129,75 @@ func dfs(grid [][]int, r, c int, result bool) bool {
 	}
 	return result
 }
+
+func numEnclaves(grid [][]int) int {
+	ans := 0
+	var dfs func(grid [][]int, x int, y int)
+
+	dfs = func(grid [][]int, x int, y int) {
+		if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[0]) || grid[x][y] == 0 {
+			return
+		}
+		grid[x][y] = 0
+
+		dfs(grid, x+1, y)
+		dfs(grid, x-1, y)
+		dfs(grid, x, y+1)
+		dfs(grid, x, y-1)
+	}
+
+	for i, v := range grid {
+		for j := range v {
+			if i == 0 || j == 0 || i == len(grid)-1 || j == len(grid[0])-1 {
+				dfs(grid, i, j)
+			}
+		}
+	}
+
+	for i, v := range grid {
+		for j := range v {
+			if grid[i][j] > 0 {
+				ans++
+			}
+		}
+	}
+	return ans
+}
+
+func countSubIslands(grid1 [][]int, grid2 [][]int) int {
+	flag := false
+	ans := 0
+
+	var dfs func(grid [][]int, x int, y int)
+
+	dfs = func(grid [][]int, x int, y int) {
+		if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[0]) || grid[x][y] == 0 {
+			return
+		}
+
+		if grid1[x][y] != 1 {
+			flag = false
+		}
+
+		grid[x][y] = 0
+
+		dfs(grid, x+1, y)
+		dfs(grid, x-1, y)
+		dfs(grid, x, y+1)
+		dfs(grid, x, y-1)
+	}
+
+	for i, v := range grid2 {
+		for j := range v {
+			if grid2[i][j] > 0 {
+				flag = true
+				dfs(grid2, i, j)
+				if flag {
+					ans++
+				}
+			}
+		}
+	}
+	return ans
+
+}
