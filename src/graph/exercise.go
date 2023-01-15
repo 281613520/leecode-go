@@ -201,3 +201,38 @@ func countSubIslands(grid1 [][]int, grid2 [][]int) int {
 	return ans
 
 }
+
+func NumOfMinutes(n int, headID int, manager []int, informTime []int) int {
+	queue := make([][]int, 0)
+	queue = append(queue, []int{headID, 0})
+	ans := 0
+	graph := make([][]int, n)
+	for i, v := range manager {
+		if v != -1 {
+			if graph[v] == nil {
+				graph[v] = make([]int, 0)
+			}
+
+			graph[v] = append(graph[v], i)
+		}
+	}
+
+	for len(queue) > 0 {
+		curId := queue[0]
+		queue = queue[1:]
+		time := informTime[curId[0]]
+		if time == 0 {
+			continue
+		}
+		ids := graph[curId[0]]
+		ans = max(curId[1], ans)
+		nextTime := curId[1] + time
+
+		for _, id := range ids {
+			queue = append(queue, []int{id, nextTime})
+		}
+
+	}
+
+	return ans
+}
